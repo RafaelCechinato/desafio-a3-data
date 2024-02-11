@@ -1,12 +1,19 @@
-import { useState } from 'react'
+import { useContext, useEffect } from 'react'
+import { Context } from '../Context'
 import './style.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const {allContext,setAllContext} = useContext<any>(Context);
+
+  useEffect(() => {
+    console.log(allContext);
+    setAllContext({...allContext,formulario:{"nome":"A"}})
+  },[])
+  
 
   return (
     <>
-      <a>A</a>
+      
     </>
   )
 }

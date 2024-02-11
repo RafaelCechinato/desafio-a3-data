@@ -1,13 +1,13 @@
-import { createContext, useContext } from 'react';
+import { createContext, useState } from 'react';
 
 const Context = createContext({});
 
 const Provider = ({children}) => {
-    const [context, setContext] = useContext(context)
+    const [allContext, setAllContext] = useState({})
 
-    return <Context.Provider value={[context,setContext]}>
+    return <Context.Provider value={{allContext,setAllContext}}>
         {children}
     </Context.Provider>
 }
 
-export default Provider;
+export {Provider,Context};

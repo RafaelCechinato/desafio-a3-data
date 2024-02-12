@@ -8,19 +8,14 @@ export declare class SurgicalRequestServiceImpl implements SurgicalRequestServic
     createSurgicalRequest(data: {
         room: {
             code: number;
-            number: string;
-            floor: string;
-            block: string;
         }[];
         procedures: {
             code: number;
-            name: string;
         }[];
         doctor: string;
         pacient: string;
         hospital: {
             code: number;
-            name: string;
         }[];
         dateSurgical: Date;
         dateCreate: Date;

@@ -57,25 +57,25 @@ export class SurgicalRequestServiceImpl implements SurgicalRequestService {
 
     async createSurgicalRequest(
         data: {
-            room: { code: number; number: string; floor: string; block: string }[];
-            procedures: { code: number; name: string }[];
+            room: { code: number }[];
+            procedures: { code: number }[];
             doctor: string;
             pacient: string;
-            hospital: { code: number; name: string }[];
+            hospital: { code: number }[];
             dateSurgical: Date;
             dateCreate: Date;
             observations: string;
         }
     ): Promise<SurgicalRequest> {
         const { room, procedures, doctor, pacient, hospital, dateSurgical, dateCreate, observations } = data;
-
+    
         const createdSurgicalRequest = await this.prisma.getPrisma().surgicalRequest.create({
             data: {
-                room: { create: room },
-                procedures: { create: procedures },
+                room: { connect: room }, // Use connect to reference existing rooms
+                procedures: { connect: procedures }, // Use connect to reference existing procedures
                 doctor,
                 pacient,
-                hospital: { create: hospital },
+                hospital: { connect: hospital }, // Use connect to reference existing hospitals
                 dateSurgical,
                 dateCreate,
                 observations,
@@ -86,7 +86,7 @@ export class SurgicalRequestServiceImpl implements SurgicalRequestService {
                 hospital: true,
             },
         });
-
+    
         return {
             code: createdSurgicalRequest.code,
             room: createdSurgicalRequest.room as { code: number; number: string; floor: string; block: string }[],

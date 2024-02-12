@@ -64,11 +64,11 @@ let SurgicalRequestServiceImpl = class SurgicalRequestServiceImpl {
         const { room, procedures, doctor, pacient, hospital, dateSurgical, dateCreate, observations } = data;
         const createdSurgicalRequest = await this.prisma.getPrisma().surgicalRequest.create({
             data: {
-                room: { create: room },
-                procedures: { create: procedures },
+                room: { connect: room },
+                procedures: { connect: procedures },
                 doctor,
                 pacient,
-                hospital: { create: hospital },
+                hospital: { connect: hospital },
                 dateSurgical,
                 dateCreate,
                 observations,

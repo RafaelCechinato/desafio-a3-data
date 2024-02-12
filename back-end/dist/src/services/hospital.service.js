@@ -9,21 +9,23 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AppController = void 0;
+exports.HospitalServiceImpl = void 0;
 const common_1 = require("@nestjs/common");
-let AppController = class AppController {
-    getHello() {
-        return 'Hello World!';
+const prisma_service_1 = require("../../prisma/prisma.service");
+let HospitalServiceImpl = class HospitalServiceImpl {
+    constructor(prisma) {
+        this.prisma = prisma;
+    }
+    async getAllHospitals() {
+        return this.prisma.getPrisma().hospital.findMany();
+    }
+    async createHospital(data) {
+        return this.prisma.getPrisma().hospital.create({ data });
     }
 };
-exports.AppController = AppController;
-__decorate([
-    (0, common_1.Get)(),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", String)
-], AppController.prototype, "getHello", null);
-exports.AppController = AppController = __decorate([
-    (0, common_1.Controller)()
-], AppController);
-//# sourceMappingURL=app.controller.js.map
+exports.HospitalServiceImpl = HospitalServiceImpl;
+exports.HospitalServiceImpl = HospitalServiceImpl = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+], HospitalServiceImpl);
+//# sourceMappingURL=hospital.service.js.map

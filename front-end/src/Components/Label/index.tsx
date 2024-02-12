@@ -17,7 +17,7 @@ const Label = styled.label<LabelProps>`
 function LabelComponent({children,size,color}: LabelProps) {
   return (
     <Label size={size} color={color}>
-        {children}
+      {children}
     </Label>
   )
 }

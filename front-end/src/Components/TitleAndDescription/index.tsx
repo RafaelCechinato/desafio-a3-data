@@ -21,11 +21,10 @@ const Container = styled.div`
 
 
 function TitleAndDescription({is_dark_theme,children,name,description,showDescription}: TitleAndDescriptionProps) {
-
   return (
     <Container>
         <LabelComponent color={is_dark_theme?"white":"black"} size={"16px"}>
-            {`${capitalizeFirstLetter(name)}:`}
+          {`${capitalizeFirstLetter(name)}:`} 
         </LabelComponent>
         {children}
         {showDescription?

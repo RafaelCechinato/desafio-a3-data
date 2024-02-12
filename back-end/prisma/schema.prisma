@@ -24,12 +24,20 @@ model Hospital {
   surgicalRequests SurgicalRequest[] @relation("proceduresOnSurgicalRequest")
 }
 
+model Rooms {
+  code Int @id @default(autoincrement())
+  number String @unique
+  floor String
+  block String
+  surgicalRequests SurgicalRequest[] @relation("proceduresOnSurgicalRequest")
+}
+
 
 model SurgicalRequest {
   code               Int @id @default(autoincrement())
-  room               String[]
+  room               Rooms[]  @relation("proceduresOnSurgicalRequest")
   procedures         Procedures[]  @relation("proceduresOnSurgicalRequest")
-  doutor             String
+  doctor             String
   pacient            String
   hospital           Hospital[]  @relation("proceduresOnSurgicalRequest")
   dateSurgical       DateTime

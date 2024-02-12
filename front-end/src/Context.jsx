@@ -5,7 +5,13 @@ const Context = createContext({});
 const initialState = {
     is_dark_theme: false,
     form:{
-        email:""
+        room:"", // lista de salas
+        procedures:"", // lista de procedimentos
+        doctor:"", // Doutor
+        pacient: "", // paciente
+        hospital: "", // lista de hospitais
+        dateSurgical:"", // data cirurgia
+        observations: "" // observações
     }
 }
 

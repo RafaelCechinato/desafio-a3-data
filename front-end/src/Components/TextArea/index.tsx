@@ -3,11 +3,11 @@ import { Context } from '../../Context'
 import styled from 'styled-components';
 import TitleAndDescription from '../TitleAndDescription';
 
-interface InputProps {
+interface TextAreaProps {
   is_dark_theme: boolean;
   name: string;
-  type: string;
   title: string;
+  type: string;
   placeholder: string;
   description: string;
   showDescription: boolean;
@@ -23,14 +23,15 @@ const Container = styled.div`
   background-color: inherit;
 `;
 
-const Input = styled.input<Omit<InputProps,'title' | 'description' | 'showDescription'>>`
+const TextArea = styled.textarea<Omit<TextAreaProps, 'title'|'description' | 'showDescription'>>`
   display: flex;
   flex-direction: column;
   width: 96%;
-  height: 40px;
   border-radius: 5px;
+  height: 50px;
   padding-inline: 5px;
   outline: none;
+  resize: none;
   color: ${(props) => (props.is_dark_theme ? 'white' : '#242424')};
   background-color: ${(props) => (props.is_dark_theme ? '#242424' : 'white')};
   border: 1px solid ${(props) => (props.is_dark_theme ? 'white' : '#242424')};
@@ -41,10 +42,10 @@ const Input = styled.input<Omit<InputProps,'title' | 'description' | 'showDescri
   )}
 `;
 
-function InputComponent({is_dark_theme,type,name,placeholder,description,showDescription, value, disabled,title}: InputProps) {
+function TextAreaComponent({is_dark_theme,type,name,placeholder,description,showDescription, value, disabled,title}: TextAreaProps) {
   const {allContext,setAllContext} = useContext<any>(Context);
 
-  function onHandleChange(e:ChangeEvent<HTMLInputElement>){
+  function onHandleChange(e:ChangeEvent<HTMLTextAreaElement>){
     setAllContext({...allContext, form:{...allContext.form, [name]:e.target.value}})
   }
 
@@ -56,12 +57,13 @@ function InputComponent({is_dark_theme,type,name,placeholder,description,showDes
           description={description}
           showDescription={showDescription}
         >
-          <Input 
+          <TextArea 
               is_dark_theme={is_dark_theme} 
               value={value} 
               name={name} 
               type={type} 
               placeholder={placeholder} 
+              maxLength={100}
               onChange={(e) => onHandleChange(e)} 
               disabled={disabled}
           />
@@ -70,4 +72,4 @@ function InputComponent({is_dark_theme,type,name,placeholder,description,showDes
   )
 }
 
-export default InputComponent
+export default TextAreaComponent

@@ -1,4 +1,4 @@
-import { Hospital, Procedures, Rooms } from "@prisma/client";
+import { Procedures, Rooms, Hospital } from "@prisma/client";
 export interface SurgicalRequest {
     code: number;
     procedures: Procedures[];
@@ -10,9 +10,27 @@ export interface SurgicalRequest {
     dateCreate: Date;
     observations: string;
 }
+export interface SurgicalRequestUpdateInput {
+    procedures?: {
+        connect?: Procedures[];
+        disconnect?: Procedures[];
+    };
+    room?: {
+        connect?: Rooms[];
+        disconnect?: Rooms[];
+    };
+    doctor?: string;
+    pacient?: string;
+    hospital?: {
+        connect?: Hospital[];
+        disconnect?: Hospital[];
+    };
+    dateSurgical?: Date;
+    dateCreate?: Date;
+    observations?: string;
+}
 export interface SurgicalRequestService {
     getAllSurgicalRequests(): Promise<SurgicalRequest[]>;
-    getSurgicalRequestByCode(code: number): Promise<SurgicalRequest | null>;
     createSurgicalRequest(data: {
         procedures: Procedures[];
         room: Rooms[];
@@ -23,15 +41,6 @@ export interface SurgicalRequestService {
         dateCreate: Date;
         observations: string;
     }): Promise<SurgicalRequest>;
-    updateSurgicalRequest(code: number, data: {
-        procedures: Procedures[];
-        room: Rooms[];
-        doctor: string;
-        pacient: string;
-        hospital: Hospital[];
-        dateSurgical: Date;
-        dateCreate: Date;
-        observations: string;
-    }): Promise<SurgicalRequest>;
+    updateSurgicalRequest(code: number, data: SurgicalRequestUpdateInput): Promise<SurgicalRequest>;
     deleteSurgicalRequest(code: number): Promise<void>;
 }

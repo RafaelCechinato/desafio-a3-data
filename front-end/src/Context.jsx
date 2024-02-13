@@ -1,9 +1,13 @@
 import { createContext, useState } from 'react';
+import {getTodayDate} from './Utils'
 
 const Context = createContext({});
 
 const initialState = {
     is_dark_theme: false,
+    showModal: false,
+    modalContent: "",
+    codeOfSurgicalSelected: 0,
     form:{
         room:"", // lista de salas
         procedures:"", // lista de procedimentos
@@ -11,6 +15,7 @@ const initialState = {
         pacient: "", // paciente
         hospital: "", // lista de hospitais
         dateSurgical:"", // data cirurgia
+        dateCreate: getTodayDate(), // data criação
         observations: "" // observações
     }
 }

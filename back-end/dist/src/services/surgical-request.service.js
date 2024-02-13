@@ -12,9 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SurgicalRequestServiceImpl = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../../prisma/prisma.service");
+const axios_1 = require("@nestjs/axios");
 let SurgicalRequestServiceImpl = class SurgicalRequestServiceImpl {
-    constructor(prisma) {
+    constructor(prisma, httpService) {
         this.prisma = prisma;
+        this.httpService = httpService;
     }
     async getAllSurgicalRequests() {
         const surgicalRequestsFromDB = await this.prisma.getPrisma().surgicalRequest.findMany({
@@ -35,30 +37,6 @@ let SurgicalRequestServiceImpl = class SurgicalRequestServiceImpl {
             dateCreate: request.dateCreate,
             observations: request.observations,
         }));
-    }
-    async getSurgicalRequestByCode(code) {
-        const surgicalRequestFromDB = await this.prisma.getPrisma().surgicalRequest.findUnique({
-            where: { code },
-            include: {
-                room: true,
-                procedures: true,
-                hospital: true,
-            },
-        });
-        if (!surgicalRequestFromDB) {
-            return null;
-        }
-        return {
-            code: surgicalRequestFromDB.code,
-            room: surgicalRequestFromDB.room,
-            procedures: surgicalRequestFromDB.procedures,
-            doctor: surgicalRequestFromDB.doctor,
-            pacient: surgicalRequestFromDB.pacient,
-            hospital: surgicalRequestFromDB.hospital,
-            dateSurgical: surgicalRequestFromDB.dateSurgical,
-            dateCreate: surgicalRequestFromDB.dateCreate,
-            observations: surgicalRequestFromDB.observations,
-        };
     }
     async createSurgicalRequest(data) {
         const { room, procedures, doctor, pacient, hospital, dateSurgical, dateCreate, observations } = data;
@@ -96,16 +74,25 @@ let SurgicalRequestServiceImpl = class SurgicalRequestServiceImpl {
             where: { code },
         });
         if (!existingSurgicalRequest) {
-            return null;
+            throw new common_1.NotFoundException(`SurgicalRequest with ID ${code} not found`);
         }
         const updatedSurgicalRequest = await this.prisma.getPrisma().surgicalRequest.update({
             where: { code },
             data: {
-                room: data.room ? { create: data.room } : undefined,
-                procedures: data.procedures ? { create: data.procedures } : undefined,
+                procedures: {
+                    connect: data.procedures?.connect,
+                    disconnect: data.procedures?.disconnect,
+                },
+                room: {
+                    connect: data.room?.connect,
+                    disconnect: data.room?.disconnect,
+                },
                 doctor: data.doctor,
                 pacient: data.pacient,
-                hospital: data.hospital ? { create: data.hospital } : undefined,
+                hospital: {
+                    connect: data.hospital?.connect,
+                    disconnect: data.hospital?.disconnect,
+                },
                 dateSurgical: data.dateSurgical,
                 dateCreate: data.dateCreate,
                 observations: data.observations,
@@ -142,6 +129,7 @@ let SurgicalRequestServiceImpl = class SurgicalRequestServiceImpl {
 exports.SurgicalRequestServiceImpl = SurgicalRequestServiceImpl;
 exports.SurgicalRequestServiceImpl = SurgicalRequestServiceImpl = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService,
+        axios_1.HttpService])
 ], SurgicalRequestServiceImpl);
 //# sourceMappingURL=surgical-request.service.js.map

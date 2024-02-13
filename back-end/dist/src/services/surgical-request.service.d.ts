@@ -1,10 +1,11 @@
 import { PrismaService } from '../../prisma/prisma.service';
-import { SurgicalRequest, SurgicalRequestService } from '../model/surgical-request.model';
+import { SurgicalRequest, SurgicalRequestService, SurgicalRequestUpdateInput } from '../model/surgical-request.model';
+import { HttpService } from '@nestjs/axios';
 export declare class SurgicalRequestServiceImpl implements SurgicalRequestService {
     private readonly prisma;
-    constructor(prisma: PrismaService);
+    private readonly httpService;
+    constructor(prisma: PrismaService, httpService: HttpService);
     getAllSurgicalRequests(): Promise<SurgicalRequest[]>;
-    getSurgicalRequestByCode(code: number): Promise<SurgicalRequest | null>;
     createSurgicalRequest(data: {
         room: {
             code: number;
@@ -21,26 +22,6 @@ export declare class SurgicalRequestServiceImpl implements SurgicalRequestServic
         dateCreate: Date;
         observations: string;
     }): Promise<SurgicalRequest>;
-    updateSurgicalRequest(code: number, data: {
-        room?: {
-            code: number;
-            number: string;
-            floor: string;
-            block: string;
-        }[];
-        procedures?: {
-            code: number;
-            name: string;
-        }[];
-        doctor?: string;
-        pacient?: string;
-        hospital?: {
-            code: number;
-            name: string;
-        }[];
-        dateSurgical?: Date;
-        dateCreate?: Date;
-        observations?: string;
-    }): Promise<SurgicalRequest | null>;
+    updateSurgicalRequest(code: number, data: SurgicalRequestUpdateInput): Promise<SurgicalRequest>;
     deleteSurgicalRequest(code: number): Promise<void>;
 }

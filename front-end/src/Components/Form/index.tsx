@@ -1,16 +1,17 @@
-import { FormEvent, useContext, useState } from 'react'
+import { FormEvent, useContext, useEffect, useState } from 'react'
 import { Context } from '../../Context'
-import './style.css'
 import styled from 'styled-components';
 import InputComponent from '../Input/index.tsx';
 import ButtonComponent from '../Button/index.tsx';
-import {isObjectEmpty} from '../../Utils.jsx';
+import {changeArrayToMultiSelect, changeArrayToMultiSelectRoom, getTodayDate, isObjectEmpty} from '../../Utils.jsx';
 import DatePickerComponent from '../DatePicker/index.tsx';
 import MultiSelectComponent from '../MultiSelect/index.tsx';
 import TextAreaComponent from '../TextArea/index.tsx';
+import { getAll } from '../../Axios.tsx';
 
 interface FormProps {
   is_dark_theme?: boolean;
+  sendApi: () => void;
 }
 
 interface FormType {
@@ -20,6 +21,7 @@ interface FormType {
   pacient: string, // paciente
   hospital: any, // lista de hospitais
   dateSurgical:any, // data cirurgia
+  dateCreate: any,
   observations: string // observações
 }
 
@@ -27,14 +29,20 @@ const FormContainer = styled.form<FormProps>`
   display: flex;
   flex-direction: column;
   width: initial;
+  min-width: 300px;
+  font-family: sans-serif;
   padding: 15px;
   background-color: ${(props) => (props.is_dark_theme ? '#242424' : 'white')};
 `;
 
 
-function Form() {
+
+function Form({sendApi}:FormProps) {
   const {allContext} = useContext<any>(Context);
   const [loading, setLoading] = useState(false);
+  const [rooms, setRooms] = useState<any>([]);
+  const [procedures, setProcedures] = useState<any>([]);
+  const [hospitals, setHospitals] = useState<any>([]);
   const [validationErrors, setValidationErrors] = useState<FormType>({
     room:'', 
     procedures:'',
@@ -42,6 +50,7 @@ function Form() {
     pacient: '', 
     hospital: '',
     dateSurgical:'',
+    dateCreate: '',
     observations: ''
   });
 
@@ -52,6 +61,7 @@ function Form() {
     pacient: 'Paciente', 
     hospital: 'Hospital',
     dateSurgical:'Data da cirurgia',
+    dateCreate: 'Data da criação',
     observations: 'Observações'
   };
 
@@ -63,6 +73,7 @@ function Form() {
       pacient: '', 
       hospital: '',
       dateSurgical:'',
+      dateCreate:'',
       observations: ''
     };
     let isValid = true;
@@ -92,21 +103,38 @@ function Form() {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (areAllFieldsFilled()) {
-      console.log("OK")
+      setLoading(true);
+      sendApi();
+      setLoading(false);
     }
   };
 
-  const options = [
-    { value: 'option1', label: 'Option 1' },
-    { value: 'option2', label: 'Option 2' },
-    { value: 'option3', label: 'Option 3' },
-  ];
+  useEffect(() => {
+      getAllRooms();
+      getAllProcedures();
+      getAllHospitals();
+  },[])
+
+  async function getAllRooms(){
+    const data = await getAll("/room");
+    setRooms(changeArrayToMultiSelectRoom(data));
+  }
+
+  async function getAllProcedures(){
+    const data = await getAll("/procedures");
+    setProcedures(changeArrayToMultiSelect(data));
+  }
+
+  async function getAllHospitals(){
+    const data = await getAll("/hospital");
+    setHospitals(changeArrayToMultiSelect(data));
+  }
 
   return (
-    <FormContainer is_dark_theme={allContext.is_dark_theme} onSubmit={handleSubmit}>
+    <FormContainer sendApi={sendApi} is_dark_theme={allContext.is_dark_theme} onSubmit={handleSubmit}>
       <MultiSelectComponent 
         is_dark_theme={allContext.is_dark_theme} 
-        options={options}
+        options={rooms}
         selectedOptions={allContext.form.room}
         name={"room"} 
         title={dictionary['room']}
@@ -116,7 +144,7 @@ function Form() {
       />
       <MultiSelectComponent 
         is_dark_theme={allContext.is_dark_theme} 
-        options={options}
+        options={procedures}
         selectedOptions={allContext.form.procedures}
         name={"procedures"} 
         title={dictionary['procedures']}
@@ -148,7 +176,7 @@ function Form() {
       />
       <MultiSelectComponent 
         is_dark_theme={allContext.is_dark_theme} 
-        options={options}
+        options={hospitals}
         selectedOptions={allContext.form.hospital}
         name={"hospital"} 
         title={dictionary['hospital']}
@@ -165,6 +193,17 @@ function Form() {
         showDescription={validationErrors.dateSurgical!==''?true:false}
         disabled={loading}
         description={validationErrors.dateSurgical}
+      />
+      <DatePickerComponent 
+        is_dark_theme={allContext.is_dark_theme} 
+        selected={allContext.form.dateCreate}
+        name={"dateCreate"} 
+        title={dictionary['dateCreate']}
+        defaultDate={getTodayDate()}
+        dateFormat={"dd/MM/yyyy"}
+        showDescription={validationErrors.dateCreate!==''?true:false}
+        disabled={loading}
+        description={validationErrors.dateCreate}
       />
       <TextAreaComponent 
         is_dark_theme={allContext.is_dark_theme} 

@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
 import { SurgicalRequestServiceImpl } from '../services/surgical-request.service';
-import { SurgicalRequest } from '../model/surgical-request.model';
+import { SurgicalRequest, SurgicalRequestUpdateInput } from '../model/surgical-request.model';
+import { Prisma } from '@prisma/client';
 
 @Controller('surgical-request')
 export class SurgicalRequestController {
@@ -11,23 +12,18 @@ export class SurgicalRequestController {
         return this.surgicalRequestService.getAllSurgicalRequests();
     }
 
-    @Get(':code')
-    async getSurgicalRequestByCode(@Param('code') code: number): Promise<SurgicalRequest | null> {
-        return this.surgicalRequestService.getSurgicalRequestByCode(code);
-    }
-
     @Post()
     async createSurgicalRequest(@Body() data: any): Promise<SurgicalRequest> {
         return this.surgicalRequestService.createSurgicalRequest(data);
     }
 
-    @Put(':code')
-    async updateSurgicalRequest(@Param('code') code: number, @Body() data: any): Promise<SurgicalRequest | null> {
-        return this.surgicalRequestService.updateSurgicalRequest(code, data);
+    @Put(':id')
+    async updateSurgicalRequest( @Param('id') id: string, @Body() updateData: SurgicalRequestUpdateInput, ): Promise<SurgicalRequest> {
+     return this.surgicalRequestService.updateSurgicalRequest(parseInt(id), updateData);
     }
 
     @Delete(':code')
-    async deleteSurgicalRequest(@Param('code') code: number): Promise<void> {
-        return this.surgicalRequestService.deleteSurgicalRequest(code);
+    async deleteSurgicalRequest(@Param('code') code: string): Promise<void> {
+        return this.surgicalRequestService.deleteSurgicalRequest(parseInt(code));
     }
 }

@@ -17,12 +17,17 @@ const procedures_service_1 = require("../services/procedures.service");
 const hospital_service_1 = require("../services/hospital.service");
 const room_service_1 = require("../services/room.service");
 const surgical_request_service_1 = require("../services/surgical-request.service");
+const cors = require("cors");
+const axios_1 = require("@nestjs/axios");
 let AppModule = class AppModule {
+    configure(consumer) {
+        consumer.apply(cors()).forRoutes('*');
+    }
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [prisma_module_1.PrismaModule],
+        imports: [prisma_module_1.PrismaModule, axios_1.HttpModule],
         controllers: [
             procedures_controller_1.ProceduresController,
             hospital_controller_1.HospitalController,

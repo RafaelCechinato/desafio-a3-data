@@ -22,17 +22,14 @@ let SurgicalRequestController = class SurgicalRequestController {
     async getAllSurgicalRequests() {
         return this.surgicalRequestService.getAllSurgicalRequests();
     }
-    async getSurgicalRequestByCode(code) {
-        return this.surgicalRequestService.getSurgicalRequestByCode(code);
-    }
     async createSurgicalRequest(data) {
         return this.surgicalRequestService.createSurgicalRequest(data);
     }
-    async updateSurgicalRequest(code, data) {
-        return this.surgicalRequestService.updateSurgicalRequest(code, data);
+    async updateSurgicalRequest(id, updateData) {
+        return this.surgicalRequestService.updateSurgicalRequest(parseInt(id), updateData);
     }
     async deleteSurgicalRequest(code) {
-        return this.surgicalRequestService.deleteSurgicalRequest(code);
+        return this.surgicalRequestService.deleteSurgicalRequest(parseInt(code));
     }
 };
 exports.SurgicalRequestController = SurgicalRequestController;
@@ -43,13 +40,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], SurgicalRequestController.prototype, "getAllSurgicalRequests", null);
 __decorate([
-    (0, common_1.Get)(':code'),
-    __param(0, (0, common_1.Param)('code')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", Promise)
-], SurgicalRequestController.prototype, "getSurgicalRequestByCode", null);
-__decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -57,18 +47,18 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], SurgicalRequestController.prototype, "createSurgicalRequest", null);
 __decorate([
-    (0, common_1.Put)(':code'),
-    __param(0, (0, common_1.Param)('code')),
+    (0, common_1.Put)(':id'),
+    __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], SurgicalRequestController.prototype, "updateSurgicalRequest", null);
 __decorate([
     (0, common_1.Delete)(':code'),
     __param(0, (0, common_1.Param)('code')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], SurgicalRequestController.prototype, "deleteSurgicalRequest", null);
 exports.SurgicalRequestController = SurgicalRequestController = __decorate([

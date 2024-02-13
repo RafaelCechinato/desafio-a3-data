@@ -13,6 +13,7 @@ interface DatePickerProps {
   showDescription: boolean;
   disabled: boolean;
   selected: any;
+  defaultDate?: Date;
   dateFormat: string;
 }
 
@@ -40,7 +41,7 @@ const StyledDatePicker = styled(DatePicker)<Omit<DatePickerProps,'title'|'descri
       : ''}
 `;
 
-function DatePickerComponent({ is_dark_theme, name, description, showDescription, selected, disabled, dateFormat,title }: DatePickerProps) {
+function DatePickerComponent({ is_dark_theme, name, defaultDate,description, showDescription, selected, disabled, dateFormat,title }: DatePickerProps) {
   const { allContext, setAllContext } = useContext<any>(Context);
 
   function onHandleChange(date: Date | null) {
@@ -59,6 +60,7 @@ function DatePickerComponent({ is_dark_theme, name, description, showDescription
                 selected={selected}
                 onChange={onHandleChange}
                 placeholderText="Selecione a data"
+                defaultDate={defaultDate}
                 dateFormat={dateFormat}
                 is_dark_theme={is_dark_theme}
                 disabled={disabled}

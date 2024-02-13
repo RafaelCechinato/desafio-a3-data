@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 
 interface LabelProps {
-    children: string
+    children: any
     size: string
     color: string
+    className?: string
 }
 
 const Label = styled.label<LabelProps>`
@@ -12,11 +13,12 @@ const Label = styled.label<LabelProps>`
   width: 100%;
   color: ${(props) => props.color};
   font-size: ${(props) => props.size};
+  ${(props) => props.className?props.className:""}
 `;
 
-function LabelComponent({children,size,color}: LabelProps) {
+function LabelComponent({children,size,color, className}: LabelProps) {
   return (
-    <Label size={size} color={color}>
+    <Label size={size} color={color} className={className}>
       {children}
     </Label>
   )

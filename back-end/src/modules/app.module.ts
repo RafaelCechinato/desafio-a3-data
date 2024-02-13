@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { PrismaModule } from '../modules/prisma.module';
 import { ProceduresController } from '../controllers/procedures.controller';
 import { HospitalController } from '../controllers/hospital.controller';
@@ -8,10 +8,11 @@ import { ProceduresServiceImpl } from '../services/procedures.service';
 import { HospitalServiceImpl } from '../services/hospital.service';
 import { RoomsServiceImpl } from '../services/room.service';
 import { SurgicalRequestServiceImpl } from '../services/surgical-request.service';
-
+import * as cors from 'cors';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule,HttpModule],
   controllers: [
     ProceduresController,
     HospitalController,
@@ -25,4 +26,9 @@ import { SurgicalRequestServiceImpl } from '../services/surgical-request.service
     SurgicalRequestServiceImpl,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(cors()).forRoutes('*');
+  }
+}
+
